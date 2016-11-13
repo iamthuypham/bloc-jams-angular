@@ -5,7 +5,10 @@
         <span class="ion-skip-backward"></span>
       </a>
       <a class="play-pause">
-        <span class="ion-play"></span>
+        <span class='ion-play' ng-show="!playerBar.songPlayer.currentSong.playing" ng-click="playerBar.songPlayer.play()">
+     </span>
+        <span class='ion-pause' ng-show="playerBar.songPlayer.currentSong.playing" ng-click="playerBar.songPlayer.pause()">
+     </span>
       </a>
       <a class="next">
         <span class="ion-skip-forward"></span>
@@ -46,4 +49,3 @@ What to Show                   | When to Show It
 <a class="play-pause"> to Pause| When the song is playing
 
 -->
- 

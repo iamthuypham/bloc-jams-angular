@@ -27,13 +27,20 @@
 
       currentSong = song; //Finally, set the current song to the clicked song and play it
     };
-
+    /**
+     * @function playSong
+     * @desc play current audio file as currentBuzzObject and update icon to 'Pause'
+     */
+    var playSong = function() {
+      currentBuzzObject.play();
+      currentSong.playing = true;
+    }
+    
     SongPlayer.play = function(song) {
       //For every click, program decides to play or stop a song
       if (currentSong !== song) { //Case1: if the song was clicked is not the current playing song
-        setSong(song);
-        currentBuzzObject.play(); //After set the current Buzz file to the clicked song, play it
-        song.playing = true; //Update the icon
+        setSong(song);// Set state for the current and clicked song
+        playSong(); //Play the clicked song
       }
       else if (currentSong === song) { //Case2: if the song was clicked is the current playing song
         if (currentBuzzObject.isPaused()) {

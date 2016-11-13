@@ -1,45 +1,55 @@
- (function() {
-   function SongPlayer() {
-     var SongPlayer = {};
+(function() {
+  function SongPlayer() {
+    var SongPlayer = {};
 
-     var currentSong = null;
-     var currentBuzzObject = null;
+    var currentSong = null;
+    /**
+     * @desc Buzz object audio file
+     * @type {Object}
+     */
+    var currentBuzzObject = null;
+    /**
+     * @function setSong
+     * @desc Stops currently playing song and loads new audio file as currentBuzzObject
+     * @param {Object} song
+     */
+    var setSong = function(song) {
+      if (currentBuzzObject) { //if current Buzz file is not null 
+        //*Side-note: the current Buzz file could be null in case user just landed on Album page
+        currentBuzzObject.stop();
+        currentSong.playing = null;
+      }
+      //Then program updates currentSong by
+      currentBuzzObject = new buzz.sound(song.audioUrl, { //Find the link to the clicked song
+        formats: ['mp3'],
+        preload: true
+      });
 
-     SongPlayer.play = function(song) {
-       //For every click, program decides to play or stop a song
+      currentSong = song; //Finally, set the current song to the clicked song and play it
+    };
 
-       if (currentSong !== song) { //Case1: if the song was clicked is not the current playing song
-         if (currentBuzzObject) { //if current Buzz file is not null 
-           //*Side-note: the current Buzz file could be null in case user just landed on Album page
-           currentBuzzObject.stop();
-           currentSong.playing = null;
-         }
-         else if (currentSong === song) { //Case2: if the song was clicked is the current playing song
-           if (currentBuzzObject.isPaused()) {
-             currentBuzzObject.play();
-           }
-         }
+    SongPlayer.play = function(song) {
+      //For every click, program decides to play or stop a song
+      if (currentSong !== song) { //Case1: if the song was clicked is not the current playing song
+        setSong(song);
+        currentBuzzObject.play(); //After set the current Buzz file to the clicked song, play it
+        song.playing = true; //Update the icon
+      }
+      else if (currentSong === song) { //Case2: if the song was clicked is the current playing song
+        if (currentBuzzObject.isPaused()) {
+          currentBuzzObject.play();
+        }
+      }
+    };
 
-         //Then program updates currentSong by
-         currentBuzzObject = new buzz.sound(song.audioUrl, { //Find the link to the clicked song
-           formats: ['mp3'],
-           preload: true
-         });
-         currentSong = song; //Finally, set the current song to the clicked song and play it
-         currentBuzzObject.play();
-         song.playing = true;
-       }
-     };
-     
-     SongPlayer.pause = function(song) {
-       currentBuzzObject.pause();
-       song.playing = false;
-     };
-     return SongPlayer;
-   }
+    SongPlayer.pause = function(song) {
+      currentBuzzObject.pause();
+      song.playing = false;
+    };
+    return SongPlayer;
+  }
 
-   angular
-     .module('blocJams')
-     .factory('SongPlayer', SongPlayer);
- })();
- 
+  angular
+    .module('blocJams')
+    .factory('SongPlayer', SongPlayer);
+})();

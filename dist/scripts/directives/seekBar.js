@@ -32,12 +32,22 @@
         };
         /**
          * @func fillStyle
-         * @desc update the width of fill bar
+         * @desc update the style of fill bar
          * @param {Object}
          */
         scope.fillStyle = function() {
           return {
             width: percentString()
+          };
+        };
+        /**
+         * @func thumbStyle
+         * @desc update the style of thumb
+         * @param {Object}
+         */
+        scope.thumbStyle = function() {
+          return {
+            left: percentString()
           };
         };
         /**

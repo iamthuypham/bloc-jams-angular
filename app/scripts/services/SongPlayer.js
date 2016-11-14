@@ -1,5 +1,5 @@
 (function() {
-  function SongPlayer(Fixtures) {
+  function SongPlayer($rootScope, Fixtures) {
     var SongPlayer = {};
     /**
      * @desc current Album from Fixture.js using AlbumCtrl
@@ -44,6 +44,12 @@
       currentBuzzObject = new buzz.sound(song.audioUrl, { //Find the link to the clicked song
         formats: ['mp3'],
         preload: true
+      });
+//Update time with Buzz library event by apply the fuction to rootScope so that song can be updated anytime
+      currentBuzzObject.bind('timeupdate', function() {
+        $rootScope.$apply(function() {
+          SongPlayer.currentTime = currentBuzzObject.getTime();
+        });
       });
 
       SongPlayer.currentSong = song; //Finally, set the current song to the clicked song and play it
@@ -132,5 +138,5 @@
 
   angular
     .module('blocJams')
-    .factory('SongPlayer', SongPlayer);
+    .factory('SongPlayer', ['$rootScope', 'Fixtures', SongPlayer]);
 })();

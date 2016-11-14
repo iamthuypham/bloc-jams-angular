@@ -25,6 +25,11 @@
      */
     SongPlayer.currentTime = null;
     /**
+     * @desc Current volume level
+     * @type {Number}
+     */
+    SongPlayer.volume = null;
+    /**
      * @desc Buzz object audio file
      * @type {Object}
      */
@@ -45,12 +50,18 @@
         formats: ['mp3'],
         preload: true
       });
-//Update time with Buzz library event by apply the fuction to rootScope so that song can be updated anytime
+      //Update time with Buzz library event by apply the fuction to rootScope so that song can be updated anytime
       currentBuzzObject.bind('timeupdate', function() {
         $rootScope.$apply(function() {
           SongPlayer.currentTime = currentBuzzObject.getTime();
         });
       });
+      //Update volume with Buzz library event by apply the fuction to rootScope so that volume will stay at current even when changing song
+      // currentBuzzObject.bind('volumeupdate', function() {
+      //   $rootScope.$apply(function() {
+      //     SongPlayer.volume = currentBuzzObject.getVolume();
+      //   });
+      // });
 
       SongPlayer.currentSong = song; //Finally, set the current song to the clicked song and play it
     };
@@ -130,6 +141,16 @@
     SongPlayer.setCurrentTime = function(time) {
       if (currentBuzzObject) {
         currentBuzzObject.setTime(time); //setTime is Buzz library method, set the playback position in seconds
+      }
+    };
+    /**
+     * @function setVolume
+     * @desc Set current time (in seconds) of currently playing song
+     * @param {Number} level
+     */
+    SongPlayer.setVolume = function(level) {
+      if (currentBuzzObject) {
+        currentBuzzObject.setVolume(level);
       }
     };
 

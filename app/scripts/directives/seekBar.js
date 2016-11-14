@@ -93,10 +93,10 @@
          * @desc notify onChange that scope.value has changed
          * @param {Object} newValue
          */
-        var notifyOnChange = function(newValue) {
+        var notifyOnChange = function(NewValue) {
           if (typeof scope.onChange === 'function') {
             scope.onChange({
-              value: newValue
+              value: NewValue
             });
           }
         };

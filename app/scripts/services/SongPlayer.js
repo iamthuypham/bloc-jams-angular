@@ -20,6 +20,11 @@
      */
     SongPlayer.currentSong = null; //bind to SongPlayer so that it can be accessed publically
     /**
+     * @desc Current playback time (in seconds) of currently playing song
+     * @type {Number}
+     */
+    SongPlayer.currentTime = null;
+    /**
      * @desc Buzz object audio file
      * @type {Object}
      */
@@ -48,14 +53,14 @@
      * @desc play current audio file as currentBuzzObject and update icon to 'Pause'
      */
     var playSong = function() {
-      currentBuzzObject.play();
-      SongPlayer.currentSong.playing = true;
-    }
-    /**
-     * @function stopSong
-     * @desc stop current audio file as currentBuzzObject and update icon to 'Play'
-     */
-    var stopSong = function(){
+        currentBuzzObject.play();
+        SongPlayer.currentSong.playing = true;
+      }
+      /**
+       * @function stopSong
+       * @desc stop current audio file as currentBuzzObject and update icon to 'Play'
+       */
+    var stopSong = function() {
       currentBuzzObject.stop();
       SongPlayer.currentSong.playing = null;
     }
@@ -109,6 +114,16 @@
         var song = currentAlbum.songs[currentSongIndex];
         setSong(song);
         playSong(song);
+      }
+    };
+    /**
+     * @function setCurrentTime
+     * @desc Set current time (in seconds) of currently playing song
+     * @param {Number} time
+     */
+    SongPlayer.setCurrentTime = function(time) {
+      if (currentBuzzObject) {
+        currentBuzzObject.setTime(time); //setTime is Buzz library method, set the playback position in seconds
       }
     };
 

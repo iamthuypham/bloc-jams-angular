@@ -1,5 +1,5 @@
 (function() {
-  function SongPlayer(Fixtures) {
+  function SongPlayer($rootScope, Fixtures) {
     var SongPlayer = {};
     /**
      * @desc current Album from Fixture.js using AlbumCtrl
@@ -19,6 +19,16 @@
      * @type {Object}
      */
     SongPlayer.currentSong = null; //bind to SongPlayer so that it can be accessed publically
+    /**
+     * @desc Current playback time (in seconds) of currently playing song
+     * @type {Number}
+     */
+    SongPlayer.currentTime = null;
+    /**
+     * @desc Current volume level
+     * @type {Number}
+     */
+    SongPlayer.volume = null;
     /**
      * @desc Buzz object audio file
      * @type {Object}
@@ -40,6 +50,18 @@
         formats: ['mp3'],
         preload: true
       });
+      //Update time with Buzz library event by apply the fuction to rootScope so that song can be updated anytime
+      currentBuzzObject.bind('timeupdate', function() {
+        $rootScope.$apply(function() {
+          SongPlayer.currentTime = currentBuzzObject.getTime();
+        });
+      });
+      //Update volume with Buzz library event by apply the fuction to rootScope so that volume will stay at current even when changing song
+      // currentBuzzObject.bind('volumeupdate', function() {
+      //   $rootScope.$apply(function() {
+      //     SongPlayer.volume = currentBuzzObject.getVolume();
+      //   });
+      // });
 
       SongPlayer.currentSong = song; //Finally, set the current song to the clicked song and play it
     };
@@ -48,14 +70,14 @@
      * @desc play current audio file as currentBuzzObject and update icon to 'Pause'
      */
     var playSong = function() {
-      currentBuzzObject.play();
-      SongPlayer.currentSong.playing = true;
-    }
-    /**
-     * @function stopSong
-     * @desc stop current audio file as currentBuzzObject and update icon to 'Play'
-     */
-    var stopSong = function(){
+        currentBuzzObject.play();
+        SongPlayer.currentSong.playing = true;
+      }
+      /**
+       * @function stopSong
+       * @desc stop current audio file as currentBuzzObject and update icon to 'Play'
+       */
+    var stopSong = function() {
       currentBuzzObject.stop();
       SongPlayer.currentSong.playing = null;
     }
@@ -111,11 +133,31 @@
         playSong(song);
       }
     };
+    /**
+     * @function setCurrentTime
+     * @desc Set current time (in seconds) of currently playing song
+     * @param {Number} time
+     */
+    SongPlayer.setCurrentTime = function(time) {
+      if (currentBuzzObject) {
+        currentBuzzObject.setTime(time); //setTime is Buzz library method, set the playback position in seconds
+      }
+    };
+    /**
+     * @function setVolume
+     * @desc Set current time (in seconds) of currently playing song
+     * @param {Number} level
+     */
+    SongPlayer.setVolume = function(level) {
+      if (currentBuzzObject) {
+        currentBuzzObject.setVolume(level);
+      }
+    };
 
     return SongPlayer;
   }
 
   angular
     .module('blocJams')
-    .factory('SongPlayer', SongPlayer);
+    .factory('SongPlayer', ['$rootScope', 'Fixtures', SongPlayer]);
 })();
